@@ -44,16 +44,16 @@ class GitHubUserService(object):
         for repo in repos:
             if repo["fork"]:
                 fork = github.retrieve_repo(username, repo["name"])
-                if isinstance(fork, dict):
+                if "error" in fork:
                     return fork["error"]
                 pulls = [p["html_url"] for p in
                          github.retrieve_pulls(fork["parent"]["full_name"], state="all")
                          if p["user"]["login"] == username]
 
                 if pulls:
-                    ret.append(Repo(repo["url"], repo("html_url"), pulls, True))
+                    ret.append(Repo(repo["url"], repo["html_url"], pulls, True))
                 else:
-                    ret.append(Repo(repo["url"], repo("html_url"), None, True))
-            ret.append(Repo(repo["url"], repo("html_url"), None, False))
+                    ret.append(Repo(repo["url"], repo["html_url"], None, True))
+            ret.append(Repo(repo["url"], repo["html_url"], None, False))
 
         return ret
