@@ -3,9 +3,7 @@
 {% block content %}
     <div class="container">
         {{ wtf.quick_form(form) }}
-        {{ results }}
         {% if results %}
-            {{ results }}
             <div class="panel">
                 <div class="panel-body">
                 {% if results is string %}
@@ -13,7 +11,7 @@
                 {% else %}
                     <ul>
                     {% for user in results %}
-                        <li>{{ user.login }}</li>
+                        <li><img src="{{ user.avatar_url }}" height="100px" width="100px"/>&nbsp;<a href="{{ url_for('.display_target', username=user.login) }}">{{ user.login }}</a></li>
                     {% endfor %}
                     </ul>
                 {% endif %}

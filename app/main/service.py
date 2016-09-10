@@ -2,6 +2,8 @@ from ..client import github
 from .model import FoundUser
 from .model import Repo
 from .model import FullUser
+from .model import PullRequest
+from time import sleep
 
 
 class GitHubUserService(object):
@@ -40,20 +42,20 @@ class GitHubUserService(object):
     @staticmethod
     def retrieve_repos(username):
         repos = github.retrieve_repos(username)
+        if isinstance(repos, dict) and "error" in repos:
+            return repos["error"]
         ret = []
         for repo in repos:
-            if repo["fork"]:
-                fork = github.retrieve_repo(username, repo["name"])
-                if "error" in fork:
-                    return fork["error"]
-                pulls = [p["html_url"] for p in
-                         github.retrieve_pulls(fork["parent"]["full_name"], state="all")
-                         if p["user"]["login"] == username]
+            github_repo = github.retrieve_repo(username, repo["name"])
+            if "error" in github_repo:
+                return github_repo["error"]
+            pulls = [PullRequest(p["html_url"], p["title"]) for p in
+                     github.retrieve_pulls(github_repo["full_name"], state="all")
+                     ]
 
-                if pulls:
-                    ret.append(Repo(repo["url"], repo["html_url"], pulls, True))
-                else:
-                    ret.append(Repo(repo["url"], repo["html_url"], None, True))
-            ret.append(Repo(repo["url"], repo["html_url"], None, False))
+            if pulls:
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], pulls, True))
+            else:
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], None, True))
 
         return ret

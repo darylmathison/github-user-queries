@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <img src="{{ user.avatar_url }}" height="100px" width="100px"/>&nbsp;<a href="{{ user.url }}" target="_blank"><h3>{{ user.login }}</h3></a></div>
+    <div class="panel-body">
+        {% if user.repos is string %}
+            <p>{{ user.repos }}</p>
+        {% elif user.repos %}
+            <div class="container-fluid">
+                {% for repo in user.repos %}
+                <div class="row">
+                    <div class="col-md-12"><a href="{{ repo.html_url }}" target="_blank">{{ repo.name }}</a></div>
+                    <div class="row">
+                        <div class="col-md-offset-1 col-md-5">
+                            {% if repo.pull_requests %}
+                                <div class="list-group">
+                                    {% for pull in repo.pull_requests %}
+                                        <a href="{{ pull.url }}" target="_blank" class="list-group-item">{{ pull.title }}</a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p>{{ user.login }} has not authored any pull requests</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>{{ user.login }} has no repositories</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
