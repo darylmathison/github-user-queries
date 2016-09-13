@@ -27,10 +27,9 @@ def search_for_user(user_search):
         return {"error": "{}".format(response.status_code)}
 
 
-def retrieve_repo(username, repo_name):
+def retrieve_repo(repo_url):
     """This retrieves information about a particular repo"""
-    search_uri = "{}/{}/{}".format(_repo_uri, username, repo_name)
-    response = requests.get(search_uri, headers=_headers)
+    response = requests.get(repo_url, headers=_headers)
     if response.status_code == 200:
         return response.json()
     else:
