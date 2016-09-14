@@ -46,12 +46,23 @@ class GitHubUserService(object):
             return repos["error"]
         ret = []
         for repo in repos:
-            github_repo = github.retrieve_repo(username, repo["name"])
-            if "error" in github_repo:
-                return github_repo["error"]
+            if repo["fork"]:
+                github_repo = github.retrieve_repo(repo["url"])
+                if "error" in github_repo:
+                    return github_repo["error"]
+                else:
+                    # get the parent repo since children don't have PRs
+                    github_repo = github.retrieve_repo(
+                        github_repo["parent"]["url"]
+                    )
+            else:
+                github_repo = github.retrieve_repo(repo["url"])
+                if "error" in github_repo:
+                    return github_repo["error"]
+
             pulls = [PullRequest(p["html_url"], p["title"]) for p in
                      github.retrieve_pulls(github_repo["full_name"], state="all")
-                     ]
+                     if p["user"]["login"] == username]
 
             if pulls:
                 ret.append(Repo(repo["name"], repo["url"], repo["html_url"], pulls, True))
