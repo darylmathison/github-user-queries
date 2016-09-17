@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from app.main.service import GitHubUserService
-from app.main.model import FoundUser
+from app.main.model import FoundGitHubUser
 
 
 @patch("app.main.service.github")

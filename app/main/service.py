@@ -1,9 +1,9 @@
 from ..client import github
-from .model import FoundUser
+from .model import FoundGitHubUser
 from .model import Repo
-from .model import FullUser
+from .model import FullGitHubUser
 from .model import PullRequest
-from time import sleep
+import base64
 
 
 class GitHubUserService(object):
@@ -15,10 +15,10 @@ class GitHubUserService(object):
         else:
             users = []
             for user in results:
-                user = FoundUser(user["avatar_url"],
-                                 user["repos_url"],
-                                 user["html_url"],
-                                 user["login"])
+                user = FoundGitHubUser(user["avatar_url"],
+                                       user["repos_url"],
+                                       user["html_url"],
+                                       user["login"])
                 users.append(user)
             return users
 
@@ -30,7 +30,7 @@ class GitHubUserService(object):
             return results["error"]
         else:
             user = results[0]
-            full_user = FullUser(
+            full_user = FullGitHubUser(
                 user["avatar_url"],
                 user["repos_url"],
                 user["html_url"],
@@ -70,3 +70,15 @@ class GitHubUserService(object):
                 ret.append(Repo(repo["name"], repo["url"], repo["html_url"], None, True))
 
         return ret
+
+    @staticmethod
+    def validate_user(username, password):
+        headers = {
+            "Accept": "application/json",
+            "Authorization": b"Basic " + base64.b64encode(username.encode("ascii") + b":" + password.encode("ascii"))
+        }
+        response = github.search_for_user(username, headers=headers)
+        if "error" in response:
+            return False
+        else:
+            return True
