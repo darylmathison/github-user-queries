@@ -61,13 +61,16 @@ class GitHubUserService(object):
                     return github_repo["error"]
 
             pulls = [PullRequest(p["html_url"], p["title"]) for p in
-                     github.retrieve_pulls(github_repo["full_name"], state="all")
+                     github.retrieve_pulls(github_repo["full_name"],
+                                           state="all")
                      if p["user"]["login"] == username]
 
             if pulls:
-                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], pulls, True))
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
+                                pulls, True))
             else:
-                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], None, True))
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
+                                None, True))
 
         return ret
 
