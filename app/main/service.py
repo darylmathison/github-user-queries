@@ -67,10 +67,10 @@ class GitHubUserService(object):
 
             if pulls:
                 ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
-                                pulls, True))
+                                pulls, repo["fork"]))
             else:
                 ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
-                                None, True))
+                                None, repo["fork"]))
 
         return ret
 
@@ -78,7 +78,9 @@ class GitHubUserService(object):
     def validate_user(username, password):
         headers = {
             "Accept": "application/json",
-            "Authorization": b"Basic " + base64.b64encode(username.encode("ascii") + b":" + password.encode("ascii"))
+            "Authorization": b"Basic " + base64.b64encode(
+                username.encode("ascii") + b":" + password.encode("ascii")
+            )
         }
         response = github.search_for_user(username, headers=headers)
         if "error" in response:
