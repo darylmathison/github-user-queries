@@ -1,9 +1,10 @@
-from ..client import github
+import base64
+
 from .model import FoundGitHubUser
-from .model import Repo
 from .model import FullGitHubUser
 from .model import PullRequest
-import base64
+from .model import Repo
+from ..client import github
 
 
 class GitHubUserService(object):
@@ -61,13 +62,16 @@ class GitHubUserService(object):
                     return github_repo["error"]
 
             pulls = [PullRequest(p["html_url"], p["title"]) for p in
-                     github.retrieve_pulls(github_repo["full_name"], state="all")
+                     github.retrieve_pulls(github_repo["full_name"],
+                                           state="all")
                      if p["user"]["login"] == username]
 
             if pulls:
-                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], pulls, True))
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
+                                pulls, repo["fork"]))
             else:
-                ret.append(Repo(repo["name"], repo["url"], repo["html_url"], None, True))
+                ret.append(Repo(repo["name"], repo["url"], repo["html_url"],
+                                None, repo["fork"]))
 
         return ret
 
@@ -75,7 +79,9 @@ class GitHubUserService(object):
     def validate_user(username, password):
         headers = {
             "Accept": "application/json",
-            "Authorization": b"Basic " + base64.b64encode(username.encode("ascii") + b":" + password.encode("ascii"))
+            "Authorization": b"Basic " + base64.b64encode(
+                username.encode("ascii") + b":" + password.encode("ascii")
+            )
         }
         response = github.search_for_user(username, headers=headers)
         if "error" in response:

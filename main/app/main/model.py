@@ -9,14 +9,25 @@ Repo = collections.namedtuple("Repo", ("name", "url", "html_url", "pull_requests
 PullRequest = collections.namedtuple("PullRequest", ("url", "title"))
 
 
-class User(object):
+class User:
 
-    users = dict()
+    class Factory:
+        users = dict()
 
-    def __new__(cls, username, *args, **kwargs):
-        obj = super().__new__(cls)
-        cls.users[username] = obj
-        return obj
+        @classmethod
+        def get(cls, user_id):
+            try:
+                return cls.users[user_id]
+            except KeyError as ke:
+                return None
+
+        @classmethod
+        def create(cls, username, password):
+            user = User(username, password)
+            cls.users[user.get_id()] = user
+            return user
+
+    keeper = Factory()
 
     def __init__(self, username, password):
         self.username = username
@@ -28,6 +39,4 @@ class User(object):
     def get_id(self):
         return self.username
 
-    @classmethod
-    def get(cls, user_id):
-        return cls.users[user_id]
+
