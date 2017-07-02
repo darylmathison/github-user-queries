@@ -11,7 +11,7 @@ login_manager.login_view = "main_app.login"
 
 @login_manager.user_loader
 def get_user(user_id):
-    return User.get(user_id)
+    return User.keeper.get(user_id)
 
 
 def create_app():

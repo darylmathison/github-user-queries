@@ -40,7 +40,7 @@ def login():
         github_name = form.login_name.data
         password = form.password.data
         if GitHubUserService.validate_user(github_name, password):
-            login_user(User(github_name, password))
+            login_user(User.keeper.create(github_name, password))
             return redirect(request.args.get("next") or url_for(".hello_world"))
 
     return render_template("login.html", form=form)
