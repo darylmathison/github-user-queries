@@ -137,3 +137,5 @@ fabric.properties
 /GitHubUserQuery.iml
 /.idea/
 /github-user-queries.iml
+/virtenv.old/
+/virtenv/

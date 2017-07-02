@@ -1,9 +1,10 @@
-from ..client import github
+import base64
+
 from .model import FoundGitHubUser
-from .model import Repo
 from .model import FullGitHubUser
 from .model import PullRequest
-import base64
+from .model import Repo
+from ..client import github
 
 
 class GitHubUserService(object):
