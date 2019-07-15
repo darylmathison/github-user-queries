@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-
 from app.main.service import GitHubUserService
 
 
