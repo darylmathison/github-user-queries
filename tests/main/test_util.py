@@ -1,5 +1,5 @@
 from unittest import TestCase
-from app.util import Config
+from app.main.util import Config
 import json
 
 
@@ -15,5 +15,3 @@ class ConfigTest(TestCase):
     def test_with_missing_value(self):
         with self.assertRaises(AttributeError):
             self.config.not_here
-
-

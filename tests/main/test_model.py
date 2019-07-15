@@ -1,5 +1,5 @@
 import unittest
-import app.main.model
+import app
 
 
 class TestUserFactory(unittest.TestCase):
