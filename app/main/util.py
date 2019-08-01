@@ -30,7 +30,7 @@ class Config:
         self.config = json.load(config_file)
 
     def _yaml_to_config(self, config_file):
-         self.config = yaml.load(config_file)
+        self.config = yaml.safe_load(config_file)
 
     def __getattr__(self, item):
         if isinstance(item, slice):
