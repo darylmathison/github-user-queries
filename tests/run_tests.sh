@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-python -m unittest discover -s tests -t .
+pip install bandit
+bandit -ll -r GitHubUserQuery.py app && python -m unittest discover -s tests -t .
