@@ -24,7 +24,7 @@ pbr==6.0.0
 Pygments==2.18.0
 PyYAML==6.0.1
 requests==2.32.3
-rich==13.7.1
+rich==14.2.0
 ruamel.appconfig==0.5.5
 ruamel.std.argparse==0.8.3
 setuptools==70.0.0
